@@ -1,11 +1,11 @@
- // SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
- /**
-  * @title Crowdfunding
-  * @author Tabassum
-  * 
-  * This system 
+/**
+ * @title Crowdfunding
+ * @author Tabassum
+ *
+ * This system
  */
 
 contract Crowdfunding {
@@ -15,9 +15,9 @@ contract Crowdfunding {
 
     struct Campaign {
         address creator;
-        uint256 goal;        
-        uint256 deadline;    
-        uint256 totalRaised; 
+        uint256 goal;
+        uint256 deadline;
+        uint256 totalRaised;
         bool withdrawn;
         string title;
     }
@@ -43,9 +43,7 @@ contract Crowdfunding {
                                  EVENTS
     //////////////////////////////////////////////////////////////*/
 
-    event CampaignCreated(
-        uint256 indexed id, address indexed creator, string title, uint256 goal, uint256 deadline
-    );
+    event CampaignCreated(uint256 indexed id, address indexed creator, string title, uint256 goal, uint256 deadline);
     event Contributed(uint256 indexed id, address indexed contributor, uint256 amount);
     event Withdrawn(uint256 indexed id, address indexed creator, uint256 amount);
     event Refunded(uint256 indexed id, address indexed contributor, uint256 amount);
@@ -92,10 +90,7 @@ contract Crowdfunding {
     /// @param title Human-readable campaign title.
     /// @param goal Funding goal in wei.
     /// @param duration Campaign length in seconds (1 to 90 days).
-    function createCampaign(string calldata title, uint256 goal, uint256 duration)
-        external
-        returns (uint256 id)
-    {
+    function createCampaign(string calldata title, uint256 goal, uint256 duration) external returns (uint256 id) {
         if (goal == 0) revert InvalidGoal();
         if (duration < MIN_DURATION || duration > MAX_DURATION) revert InvalidDuration();
 
@@ -103,12 +98,7 @@ contract Crowdfunding {
         uint256 deadline = block.timestamp + duration;
 
         _campaigns[id] = Campaign({
-            creator: msg.sender,
-            goal: goal,
-            deadline: deadline,
-            totalRaised: 0,
-            withdrawn: false,
-            title: title
+            creator: msg.sender, goal: goal, deadline: deadline, totalRaised: 0, withdrawn: false, title: title
         });
 
         emit CampaignCreated(id, msg.sender, title, goal, deadline);
