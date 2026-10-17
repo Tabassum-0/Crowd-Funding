@@ -6,17 +6,17 @@ pragma solidity ^0.8.24;
  * @author Tabassum
  *
  * This is a decentralized Crowdfunding system
- * 
+ *
  * Where users can:
  * - Create crowdfunding caimpaign
  * - Contribute funds
  * - Withdraw funds
- * 
+ *
  * It has a fixed deadline for each campaign.If the goal wasnt met before the deadline
  * contributors can reclaim their funds
- * 
+ *
  * This is a Kickstarter-style system which is All or nothing crowdfunding
- * 
+ *
  */
 
 contract Crowdfunding {
@@ -97,15 +97,15 @@ contract Crowdfunding {
                              EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
 
-    
     /**
      * This function starts a new campaign
-     * 
+     *
      * @param title Campaign title.
      * @param goal Funding goal in wei.
      * @param duration Campaign length in seconds (1 to 90 days).
-     * 
-     * */
+     *
+     *
+     */
     function createCampaign(string calldata title, uint256 goal, uint256 duration) external returns (uint256 id) {
         if (goal == 0) revert InvalidGoal();
         if (duration < MIN_DURATION || duration > MAX_DURATION) revert InvalidDuration();
@@ -120,9 +120,9 @@ contract Crowdfunding {
         emit CampaignCreated(id, msg.sender, title, goal, deadline);
     }
 
-    /** 
+    /**
      *  @notice Contribute ETH to an active campaign.
-    */
+     */
 
     function contribute(uint256 id) external payable exists(id) {
         Campaign storage c = _campaigns[id];
@@ -152,7 +152,7 @@ contract Crowdfunding {
         emit Withdrawn(id, msg.sender, amount);
     }
 
-    /** 
+    /**
      *  @notice Contributors reclaim their ETH if the campaign missed its goal.
      */
 
