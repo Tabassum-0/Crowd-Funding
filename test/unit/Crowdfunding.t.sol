@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 import {Test} from "forge-std/Test.sol";
-import {Crowdfunding} from "../src/Crowdfunding.sol";
+import {Crowdfunding} from "../../src/Crowdfunding.sol";
 
 contract RefundAttacker {
     Crowdfunding public immutable c;
