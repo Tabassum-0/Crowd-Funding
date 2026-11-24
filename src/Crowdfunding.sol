@@ -21,7 +21,7 @@ import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol
  *
  */
 
-contract Crowdfunding {
+contract Crowdfunding is ReentrancyGuard {
     /*//////////////////////////////////////////////////////////////
                                  TYPES
     //////////////////////////////////////////////////////////////*/
@@ -50,8 +50,6 @@ contract Crowdfunding {
     mapping(uint256 => Campaign) private _campaigns;
     mapping(uint256 => mapping(address => uint256)) public contributions;
 
-    uint256 private _locked = 1;
-
     /*//////////////////////////////////////////////////////////////
                                  EVENTS
     //////////////////////////////////////////////////////////////*/
@@ -77,21 +75,14 @@ contract Crowdfunding {
     error AlreadyWithdrawn();
     error NothingToRefund();
     error TransferFailed();
-    error Reentrancy();
 
     /*//////////////////////////////////////////////////////////////
                                MODIFIERS
     //////////////////////////////////////////////////////////////*/
 
-    modifier nonReentrant() {
-        if (_locked != 1) revert Reentrancy();
-        _locked = 2;
-        _;
-        _locked = 1;
-    }
 
     modifier exists(uint256 id) {
-        if (id >= campaignCount) revert CampaignNotFound();
+       _exists(id);
         _;
     }
 
@@ -174,10 +165,6 @@ contract Crowdfunding {
         emit Refunded(id, msg.sender, amount);
     }
 
-    /*//////////////////////////////////////////////////////////////
-    ///////////     EXTERNAL VIEWS FUNCTIONS   ////////////////////
-    //////////////////////////////////////////////////////////////*/
-
     function getCampaign(uint256 id) external view exists(id) returns (Campaign memory) {
         return _campaigns[id];
     }
@@ -186,4 +173,13 @@ contract Crowdfunding {
         Campaign storage c = _campaigns[id];
         return c.totalRaised >= c.goal;
     }
+
+    
+     /*//////////////////////////////////////////////////////////////
+                           INTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
+    function _exists(uint256 id) internal view{
+         if (id >= campaignCount) revert CampaignNotFound();
+     }
 }
